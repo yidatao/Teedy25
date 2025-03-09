@@ -6,7 +6,9 @@
 [![Maven CI/CD](https://github.com/sismics/docs/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/sismics/docs/actions/workflows/build-deploy.yml)
 
 
-145Teedy is an open source, lightweight document management system for individuals and businesses.
+
+
+PR Teedy is an open source, lightweight document management system for individuals and businesses.
 
 
 <hr />
