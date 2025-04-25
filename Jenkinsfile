@@ -6,6 +6,7 @@ pipeline {
                 sh 'mvn -B -DskipTests clean install'
             }
         }
+
         stage('PMD') {
             steps {
                 sh 'mvn pmd:pmd site'
