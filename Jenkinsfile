@@ -41,12 +41,11 @@ pipeline {
 
     post {
         always {
-            // Archive generated reports and binaries
             archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true
-            archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
-            archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
-            archiveArtifacts artifacts: '**/target/apidocs/**/*.*', fingerprint: true
+            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
+            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true
             junit '**/target/surefire-reports/*.xml'
         }
     }
+
 }
