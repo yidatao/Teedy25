@@ -1,24 +1,52 @@
 pipeline {
     agent any
+
     stages {
-        stage('Build') {
+        stage('Clean') {
             steps {
-                sh 'mvn -B -DskipTests clean install'
+                sh 'mvn clean'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
             }
         }
 
         stage('PMD') {
             steps {
-                sh 'mvn pmd:pmd site'
+                sh 'mvn pmd:pmd'
+            }
+        }
+
+        stage('JaCoCo') {
+            steps {
+                sh 'mvn jacoco:report'
+            }
+        }
+
+        stage('Javadoc') {
+            steps {
+                sh 'mvn javadoc:javadoc'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: '**/target/site/**', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true
+            // Archive generated reports and binaries
+            archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true
+            archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+            archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
+            archiveArtifacts artifacts: '**/target/apidocs/**/*.*', fingerprint: true
+            junit '**/target/surefire-reports/*.xml'
         }
     }
 }
