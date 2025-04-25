@@ -3,10 +3,10 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -B -DskipTests clean package'
+                sh 'mvn -B -DskipTests clean install'
             }
         }
-        stage('pmd') {
+        stage('Linter') {
             steps {
                 sh 'mvn pmd:pmd'
             }
