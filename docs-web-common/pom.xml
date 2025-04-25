@@ -112,6 +112,14 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- To allow junit 5 to run on junit 4 tests -->
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>5.9.1</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
   
   <!-- Install test jar -->
@@ -130,4 +138,10 @@
       </plugin>
     </plugins>
   </build>
+  <distributionManagement>
+    <site>
+      <id>local</id>
+      <url>file:${project.build.directory}/site</url>
+    </site>
+  </distributionManagement>
 </project>
