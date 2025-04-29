@@ -34,7 +34,7 @@ pipeline {
         stage("Run containers"){
             steps{
                 script{
-                    dockerImage.run("-d -p 8888:8080 --rm --name teedy_original")
+                    dockerImage.run("-d -p 8888:8080 --rm --name newContainer")
                 }
             }
         }
