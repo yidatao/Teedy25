@@ -1,46 +1,90 @@
-// Lab 12
+// Lab 13
 pipeline {
-    environment {
-        registry = "yidatao/teedy_original"
-        registryCredential = 'dockerpush'
-        dockerImage = ''
-    }
     agent any
+
+    environment {
+        DEPLOYMENT_NAME = "teedy25-demo"
+        CONTAINER_NAME = "teedy-original-4xmtc"
+        IMAGE_NAME = "yidatao/teedy_original:v3.0"
+    }
+
     stages {
-        stage('Maven build') { 
+        stage('Start Minikube') {
             steps {
-                sh 'mvn -B -DskipTests clean package' 
-            }
-        }
-        
-        stage('Build docker image') { 
-            steps {
-               script {
-                    dockerImage = docker.build registry + ":v3.0"
-                }
+                sh '''
+                    if ! minikube status | grep -q "Running"; then
+                        echo "Starting Minikube..."
+                        minikube start
+                    else
+                        echo "Minikube already running."
+                    fi
+                '''
             }
         }
 
-        stage("Publish to dockerhub") {
+        stage('Set Image') {
             steps {
-                script {
-                    docker.withRegistry( '', registryCredential ) {
-                    dockerImage.push()
-                    } 
-                }                    
+                sh '''
+                    echo "Setting image for deployment..."
+                    kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE_NAME}
+                '''
             }
         }
 
-        stage("Run containers"){
-            steps{
-                script{
-                    dockerImage.run("-d -p 8888:8080 --rm --name newContainer")
-                }
+        stage('Verify') {
+            steps {
+                sh 'kubectl rollout status deployment/${DEPLOYMENT_NAME}'
+                sh 'kubectl get pods'
             }
         }
-        
     }
 }
+
+
+
+// Lab 12
+// pipeline {
+//     environment {
+//         registry = "yidatao/teedy_original"
+//         registryCredential = 'dockerpush'
+//         dockerImage = ''
+//     }
+//     agent any
+//     stages {
+//         stage('Maven build') { 
+//             steps {
+//                 sh 'mvn -B -DskipTests clean package' 
+//             }
+//         }
+        
+//         stage('Build docker image') { 
+//             steps {
+//                script {
+//                     dockerImage = docker.build registry + ":v3.0"
+//                 }
+//             }
+//         }
+
+//         stage("Publish to dockerhub") {
+//             steps {
+//                 script {
+//                     docker.withRegistry( '', registryCredential ) {
+//                     dockerImage.push()
+//                     } 
+//                 }                    
+//             }
+//         }
+
+//         stage("Run containers"){
+//             steps{
+//                 script{
+//                     dockerImage.run("-d -p 8888:8080 --rm --name newContainer")
+//                 }
+//             }
+//         }
+        
+//     }
+// }
 
 // Lab 11
 // pipeline {
